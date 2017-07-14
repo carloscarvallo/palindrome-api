@@ -9,6 +9,7 @@ npm install
 ``` bash
 node index.js
 ```
+The testing client is running on `http://localhost:3001`
 
 ## Make Request with query parameters
 ``` bash

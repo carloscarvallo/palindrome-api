@@ -2,20 +2,12 @@
 const express = require('express'),
       app = express(),
       bodyParser = require('body-parser'),
-      morgan = require('morgan'),
-      nunjucks = require('nunjucks');
+      morgan = require('morgan');
 
-app.use('/static', express.static(__dirname + '/public'));
+app.use(express.static('public'));
 app.use(bodyParser.urlencoded({ extended: false }));
 app.use(bodyParser.json());
 app.use(morgan('combined'));
-
-// template initialization
-nunjucks.configure('assets', {
-    autoescape: true,
-    noCache: true,
-    express: app
-});
 
 const port = process.env.PORT || 3001;
 
@@ -33,7 +25,7 @@ let format = function( str ) {
 };
 
 app.get('/', ( req, res ) => {
-  res.render('index.html');
+  res.send("Welcome");
 });
 
 // API ROUTES ------------------------------------------------------------------
@@ -46,12 +38,13 @@ routes.get('/', ( req, res ) => {
 
 routes.route('/palindromes')
   .get(( req, res ) => {
-    if (req.query.q) {
-      var formatted = format(req.query.q);
+    var word = req.query.q;
+    if (word) {
+      var formatted = format(word);
       var reversed = reverse(formatted);
-      if (reversed == format(req.query.q)) {
+      if (reversed == format(word)) {
         console.log("reversed:", reversed);
-        console.log("original:", req.query.q);
+        console.log("original:", word);
         res.json({ message: "IS A PALINDROME" });
       } else {
         res.status(400).json({ message: "IS NOT A PALINDROME" });
@@ -62,8 +55,18 @@ routes.route('/palindromes')
 
 routes.route('/palindromes/:palindrome')
   .get(( req, res ) => {
-    if (req.params.palindrome)
-      res.send(req.params.palindrome);
+    var word = req.params.palindrome;
+    if (word) {
+      var formatted = format(word);
+      var reversed = reverse(formatted);
+      if (reversed == format(word)) {
+        console.log("reversed:", reversed);
+        console.log("original:", word);
+        res.json({ message: "IS A PALINDROME" });
+      } else {
+        res.status(400).json({ message: "IS NOT A PALINDROME" });
+      }
+    } else
     res.status(400).json({ error: "You must enter at least one palindrome" })
   });
 

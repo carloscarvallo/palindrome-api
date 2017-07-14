@@ -1,6 +1,6 @@
 # palindrome-api
 
-## Execute
+## Run
 ``` bash
 node index.js
 ```

@@ -24,6 +24,14 @@ app.use(( req, res, next ) => {
   next();
 });
 
+let reverse = function( str ) {
+  return str.split("").reverse().join("");
+};
+
+let format = function( str ) {
+  return str.split(" ").join("");
+};
+
 app.get('/', ( req, res ) => {
   res.render('index.html');
 });
@@ -38,14 +46,25 @@ routes.get('/', ( req, res ) => {
 
 routes.route('/palindromes')
   .get(( req, res ) => {
-    if (req.query.q)
-      res.send(req.query.q);
+    if (req.query.q) {
+      var formatted = format(req.query.q);
+      var reversed = reverse(formatted);
+      if (reversed == format(req.query.q)) {
+        console.log("reversed:", reversed);
+        console.log("original:", req.query.q);
+        res.json({ message: "IS A PALINDROME" });
+      } else {
+        res.status(400).json({ message: "IS NOT A PALINDROME" });
+      }
+    } else
     res.status(400).json({ error: "You must enter at least one palindrome" })
   });
 
 routes.route('/palindromes/:palindrome')
   .get(( req, res ) => {
-    res.send(req.params.palindrome);
+    if (req.params.palindrome)
+      res.send(req.params.palindrome);
+    res.status(400).json({ error: "You must enter at least one palindrome" })
   });
 
 app.use('/api', routes);

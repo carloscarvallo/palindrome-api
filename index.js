@@ -2,12 +2,14 @@
 const express = require('express'),
       app = express(),
       bodyParser = require('body-parser'),
-      morgan = require('morgan');
+      morgan = require('morgan'),
+      cors = require('cors');
 
 app.use(express.static('public'));
 app.use(bodyParser.urlencoded({ extended: false }));
 app.use(bodyParser.json());
 app.use(morgan('combined'));
+app.use(cors());
 
 const port = process.env.PORT || 3001;
 

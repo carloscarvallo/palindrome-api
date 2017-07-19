@@ -1,11 +1,13 @@
 import React, { Component } from 'react';
-//import logo from './logo.svg';
-//import './App.css';
+import jQuery from 'jquery';
 
 class App extends Component {
   constructor(props) {
     super(props);
-    this.state = { value : '' };
+    this.state = {
+      value : '',
+      message : ''
+    };
     this.handleChange = this.handleChange.bind(this);
     this.handleSubmit = this.handleSubmit.bind(this);
   }
@@ -15,7 +17,18 @@ class App extends Component {
   }
 
   handleSubmit( event ) {
-    alert('A name was submitted: ' + this.state.value);
+    jQuery.ajax({
+      type: 'GET',
+      url: 'http://localhost:3001/api/palindromes?q='+ this.state.value,
+      success: function( data ) {
+        console.log(data.message);
+        this.setState({ message: data.message });
+      }.bind(this),
+      error: function( err ) {
+        console.log(err.responseJSON.message);
+        this.setState({ message: err.responseJSON.message });
+      }.bind(this)
+    })
     event.preventDefault();
   }
 
@@ -24,9 +37,13 @@ class App extends Component {
       <form onSubmit={this.handleSubmit}>
         <label>
           Word:
+            <br/>
             <input type="text" value={this.state.value} onChange={this.handleChange} />
         </label>
+        <br/>
         <input type="submit" value="Submit" />
+        <br/>
+        <label onChange={this.handleChange}>{this.state.message}</label>
       </form>
     );
   }

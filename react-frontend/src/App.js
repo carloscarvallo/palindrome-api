@@ -2,7 +2,7 @@ import React, { Component } from 'react';
 import jQuery from 'jquery';
 
 function AlertLabel( props ) {
-  return <label className={`alert alert-dismissible ${props.typeAlert}`}>{props.message}</label>
+  return <label className={`alert alert-dismissible ${props.typeAlert} text-center`}>{props.message}</label>
 }
 
 class App extends Component {
@@ -23,25 +23,34 @@ class App extends Component {
   }
 
   handleSubmit( event ) {
-    jQuery.ajax({
-      type: 'GET',
-      //url: 'https://carloscarvallo.me/api/palindromes?q='+ this.state.value,
-      url: 'http://localhost:3001/api/palindromes?q='+ this.state.value,
-      success: function( data ) {
-        this.setState({
-          message: data.message,
-          typeAlert: "alert-info"
-        });
-      }.bind(this),
-      error: function( err ) {
-        this.setState({
-          message: err.responseJSON.message,
-          typeAlert: "alert-warning"
-        });
-      }.bind(this)
-    })
-    event.preventDefault();
-    this.setState({ showLabel: true });
+    if (this.state.value === "") {
+      this.setState({
+        message: "Enter you word!",
+        typeAlert: "alert-warning",
+        showLabel: true
+      });
+      event.preventDefault();
+    } else {
+      jQuery.ajax({
+        type: 'GET',
+        //url: 'https://carloscarvallo.me/api/palindromes?q='+ this.state.value,
+        url: 'http://localhost:3001/api/palindromes?q='+ this.state.value,
+        success: function( data ) {
+          this.setState({
+            message: "Yes! is a Palindrome",
+            typeAlert: "alert-info"
+          });
+        }.bind(this),
+        error: function( err ) {
+          this.setState({
+            message: "Is not a Palindrome",
+            typeAlert: "alert-warning"
+          });
+        }.bind(this)
+      })
+      event.preventDefault();
+      this.setState({ showLabel: true });
+    }
   }
 
   render() {
@@ -49,14 +58,14 @@ class App extends Component {
       <div className="jumbotron container-fluid">
       <form onSubmit={this.handleSubmit}>
         <label>
-          Insert your Palidrome here!
+          Let's see if your word is a palindrome!
             <br/>
             <br/>
             <input type="text" value={this.state.value} onChange={this.handleChange} />
         </label>
         <br/>
         <br/>
-        <input type="submit" value="Submit" />
+        <input className="btn btn-primary" type="submit" value="Let's Go!" />
         <br/>
         <br/>
         {this.state.showLabel ? <AlertLabel message={this.state.message} typeAlert={this.state.typeAlert} /> : null}

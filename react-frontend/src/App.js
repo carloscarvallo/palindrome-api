@@ -21,11 +21,9 @@ class App extends Component {
       type: 'GET',
       url: 'http://localhost:3001/api/palindromes?q='+ this.state.value,
       success: function( data ) {
-        console.log(data.message);
         this.setState({ message: data.message });
       }.bind(this),
       error: function( err ) {
-        console.log(err.responseJSON.message);
         this.setState({ message: err.responseJSON.message });
       }.bind(this)
     })

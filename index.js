@@ -23,7 +23,8 @@ let reverse = function( str ) {
 };
 
 let format = function( str ) {
-  return str.split(" ").join("");
+  var strPre = str.toLowerCase();
+  return strPre.split(" ").join("");
 };
 
 app.get('/', ( req, res ) => {

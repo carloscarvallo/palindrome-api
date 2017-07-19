@@ -19,7 +19,8 @@ class App extends Component {
   handleSubmit( event ) {
     jQuery.ajax({
       type: 'GET',
-      url: 'http://localhost:3001/api/palindromes?q='+ this.state.value,
+      url: 'https://carloscarvallo.me/api/palindromes?q='+ this.state.value,
+      //url: 'http://localhost:3001/api/palindromes?q='+ this.state.value,
       success: function( data ) {
         this.setState({ message: data.message });
       }.bind(this),
